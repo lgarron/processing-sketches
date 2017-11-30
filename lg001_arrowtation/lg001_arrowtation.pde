@@ -21,7 +21,6 @@ void setup() {
 float t1, t2;
 
 void arrow() {
-  rotate(ease(t)*HALF_PI);
   push();
   translate(0, -l/2);
   triangle(-l, 0, l, 0, 0, -l);
@@ -29,10 +28,11 @@ void arrow() {
   rect(-l/2, -l/2, l, l);
 }
 
-void grid() {
+void grid(p) {
   for (float x = 0; x <= width; x = x + l*2) {
     for (float y = 0; y <= height; y = y + l*2) {
       push();
+      rotate(ease(p)*HALF_PI);
       translate(x, y);
       arrow();
       pop();
@@ -41,8 +41,15 @@ void grid() {
 }
 
 void draw_() {
-  background(0); 
-  grid();
+  background(0);
+  grid(t*2);
+  // if (t < 1/2) {
+  //   background(0);
+  //   grid(constrain(t*2, 0, 1));
+  // } else {
+  //   background(0);
+  //   grid(constrain(t*2-1, 0, 1));
+  // }
 }
 
 //////////////////////////////////////////////////////////////////////////////
