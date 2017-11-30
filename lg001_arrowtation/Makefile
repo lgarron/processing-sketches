@@ -20,7 +20,3 @@ gif:
 	       -crf 25 \
 	       -pix_fmt yuv420p \
 	       gif/out.mp4
-
-.PHONY: tweet
-tweet:
-	open "https://twitter.com/lgarron/status/936151229930946562"
