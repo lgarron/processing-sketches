@@ -72,10 +72,12 @@ void pop()  { popStyle();   popMatrix(); }
 void draw() {
   
   if(!recording){
-    t = mouseX*1.0/width;
     c = mouseY*1.0/height;
-    if(mousePressed)
-        println(c);
+    if(mousePressed) {
+        t = (t + (ease(c))/10) % 1;
+    } else {
+      t = mouseX*1.0/width;
+    }
     draw_();
   }
   
