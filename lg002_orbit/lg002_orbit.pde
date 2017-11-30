@@ -1,10 +1,21 @@
-int samplesPerFrame = 4;
-int numFrames = 200;
-float shutterAngle = 0.6;
-
+//////////////////////////////////////////////////////////////////////////////
+// Common Settings
+int numSec = 4;
 boolean recording = false;
 
-float r;
+//////////////////////////////////////////////////////////////////////////////
+// Sketch
+
+// Planet radius; set in setup().
+float kRadius;
+// Planet : moon scale
+int kMoonScale = 4;
+// Moon distance : planet radius
+int kMoonDist = kMoonScale/2;
+// # of orbits performed by small moons around their planets per animation
+// iteration. Note that the outside orbits of the outermost moons are slowed
+// down in order to synchronize with the reference frame.
+int kOrbitRate = 2;
 
 void setup() {
   size(512, 512, P3D);
@@ -15,51 +26,60 @@ void setup() {
   fill(255);
   noStroke();
 
-  r = width/8;
+  kRadius = width/8;
 }
 
-// k is the # of iterations over which the easing out happens.
-float long_ease(int depth, float k) {
-  return ease((t - depth + (k-1)) / k);
+// Starts with position + speed of 0, reaches given speed at given time.
+float approach_rate(float cur_time, float speed, float by_time) {
+  if (cur_time < 0) {
+    return 0;
+  }
+  if (cur_time < by_time) {
+    return (cur_time * cur_time) / (2 * by_time) * speed;
+  }
+  return ((2 *cur_time - by_time) * by_time) / (2 * by_time) * speed;
 }
 
 void planet(int iterations, int depth) {
-  push();
-
-  ellipse(0, 0, r, r);
+  ellipse(0, 0, kRadius, kRadius);
   if (iterations > 0) {
     push();
-    translate(r*2, 0);
-    scale(0.25);
-    if (depth == 0) {
-      rotate(-PI * 2 * pow(1-t, 2));
-    } else {
-      rotate(PI * (4 * t - 2));
-    }
+    translate(kRadius*kMoonDist, 0);
+    scale(1.0/kMoonScale);
+    rotate(-2 * PI * approach_rate(1-(t - depth), kOrbitRate, 2));
     rotate(-HALF_PI);
     planet(iterations - 1, depth + 1);
     pop();
   }
-  pop();
 }
 
-float loggy() {
-  return pow(pow(2, 0.5), t*2);
+// Zooms smoothly around the focus of the spiral formed by the moons.
+void log_zoom() {
+  float denom = kMoonScale*kMoonScale + 1;
+  float base = kRadius*kMoonDist*(kMoonScale/denom);
+
+  translate(base*kMoonScale, -base);
+  scale(pow(kMoonScale, t));
+  rotate(HALF_PI*t);
+  translate(-base*kMoonScale, base);
 }
 
 void draw_() {
   background(255);
   translate(width/2, height/2);
-  translate(r * 2 * 16 / 17, -r * 2 * 4/17);
-  scale(pow(4, t));
-  rotate(HALF_PI*t);
-  translate(-r * 2 * 16 / 17, r * 2 * 4/17);
+  log_zoom();
   planet(10, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Boilerplate by @beesandbombs, adapted by @lgarron
 
+// Constants
+int kFramesPerSec = 50;
+int kSamplesPerFrame = 4;
+float kShutterAngle = 0.6;
+
+// Global variables
 int[][] result;
 float t, c;
 
@@ -79,9 +99,15 @@ void draw() {
     if(mousePressed) {
         t = (t + (ease(c))/10) % 1;
     } else {
-      t = mouseX*1.0/width;
+      t = (mouseX*2.0/width) % 1; // TODO: Match to kFramesPerSec
     }
+    push();
     draw_();
+    pop();
+    push();
+    fill(128);
+    rect(0, 0, width * t, 4);
+    pop();
   }
   
   else {
@@ -90,8 +116,8 @@ void draw() {
         result[i][a] = 0;
   
     c = 0;
-    for (int sa=0; sa<samplesPerFrame; sa++) {
-      t = map(frameCount-1 + sa*shutterAngle/samplesPerFrame, 0, numFrames, 0, 1);
+    for (int sa=0; sa<kSamplesPerFrame; sa++) {
+      t = map(frameCount-1 + sa*kShutterAngle/kSamplesPerFrame, 0, numSec*kFramesPerSec, 0, 1);
       draw_();
       loadPixels();
       for (int i=0; i<pixels.length; i++) {
@@ -104,13 +130,13 @@ void draw() {
     loadPixels();
     for (int i=0; i<pixels.length; i++)
       pixels[i] = 0xff << 24 | 
-        int(result[i][0]*1.0/samplesPerFrame) << 16 | 
-        int(result[i][1]*1.0/samplesPerFrame) << 8 | 
-        int(result[i][2]*1.0/samplesPerFrame);
+        int(result[i][0]*1.0/kSamplesPerFrame) << 16 | 
+        int(result[i][1]*1.0/kSamplesPerFrame) << 8 | 
+        int(result[i][2]*1.0/kSamplesPerFrame);
     updatePixels();
   
     saveFrame("frames/###.png");
-    if (frameCount==numFrames)
+    if (frameCount == numSec*kFramesPerSec)
       exit();
   }
 }
