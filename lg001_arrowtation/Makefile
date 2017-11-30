@@ -19,6 +19,7 @@ gif:
 	       -vcodec libx264 \
 	       -crf 25 \
 	       -pix_fmt yuv420p \
+	       -y \
 	       gif/$(NAME).mp4
 
 .PHONY: crush-gif
