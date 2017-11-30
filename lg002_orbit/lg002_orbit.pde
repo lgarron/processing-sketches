@@ -18,25 +18,38 @@ void setup() {
   r = width/8;
 }
 
-void planet(int iterations) {
+// k is the # of iterations over which the easing out happens.
+float long_ease(int depth, float k) {
+  return ease((t - depth + (k-1)) / k);
+}
+
+void planet(int iterations, int depth) {
+  push();
+  scale(pow(4, long_ease(depth, 1)));
+  rotate(HALF_PI*long_ease(depth, 2));
+  translate(-r*2*long_ease(depth, 2), 0);
+
   ellipse(0, 0, r, r);
   if (iterations > 0) {
     push();
     translate(r*2, 0);
     scale(0.25);
-    rotate(-HALF_PI + t * PI * 4);
-    planet(iterations - 1);
+    rotate(-HALF_PI + t * PI * 4 * (1 - long_ease(depth, 1)));
+    planet(iterations - 1, depth + 1);
     pop();
   }
+  pop();
+}
+
+float loggy() {
+  return pow(pow(2, 0.5), t*2);
 }
 
 void draw_() {
   background(255);
   translate(width/2, height/2);
-  scale(1+3*t);
-  rotate(HALF_PI*t);
-  translate(-r*2*t, 0);
-  planet(10);
+  // scale(pow(4, t));
+  planet(10, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -46,8 +59,9 @@ int[][] result;
 float t, c;
 
 float ease(float p) {
-  float p3 = p * p * p;
-  return p3 * (10 - 15 * p + 6 * p * p);
+  float clipped = constrain(p, 0, 1);
+  float clipped3 = clipped * clipped * clipped;
+  return clipped3 * (10 - 15 * clipped + 6 * clipped * clipped);
 }
 
 void push() { pushMatrix(); pushStyle(); }
