@@ -25,16 +25,18 @@ float long_ease(int depth, float k) {
 
 void planet(int iterations, int depth) {
   push();
-  scale(pow(4, long_ease(depth, 1)));
-  rotate(HALF_PI*long_ease(depth, 2));
-  translate(-r*2*long_ease(depth, 2), 0);
 
   ellipse(0, 0, r, r);
   if (iterations > 0) {
     push();
     translate(r*2, 0);
     scale(0.25);
-    rotate(-HALF_PI + t * PI * 4 * (1 - long_ease(depth, 1)));
+    if (depth == 0) {
+      rotate(-PI * 2 * pow(1-t, 2));
+    } else {
+      rotate(PI * (4 * t - 2));
+    }
+    rotate(-HALF_PI);
     planet(iterations - 1, depth + 1);
     pop();
   }
@@ -48,7 +50,10 @@ float loggy() {
 void draw_() {
   background(255);
   translate(width/2, height/2);
-  // scale(pow(4, t));
+  translate(r * 2 * 16 / 17, -r * 2 * 4/17);
+  scale(pow(4, t));
+  rotate(HALF_PI*t);
+  translate(-r * 2 * 16 / 17, r * 2 * 4/17);
   planet(10, 0);
 }
 
