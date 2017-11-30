@@ -18,8 +18,6 @@ void setup() {
   l = width/8;
 }
 
-float t1, t2;
-
 void arrow() {
   push();
   translate(0, -l/2);
