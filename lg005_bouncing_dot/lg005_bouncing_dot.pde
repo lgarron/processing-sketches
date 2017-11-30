@@ -14,7 +14,7 @@ public void settings() {
 // Sketch
 
 // Bouncy dot radius
-float kR; // TODO: squish
+float kR;
 float bounceHeight;
 int kNumBounces = 8;
 
