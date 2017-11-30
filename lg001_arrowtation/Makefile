@@ -1,5 +1,5 @@
 .PHONY: all
-all: frames gif
+all: frames gif crush-gif
 
 .PHONY: frames
 frames:
@@ -19,4 +19,8 @@ gif:
 	       -vcodec libx264 \
 	       -crf 25 \
 	       -pix_fmt yuv420p \
-	       gif/out.mp4
+	       gif/$(NAME).mp4
+
+.PHONY: crush-gif
+crush-gif:
+	gifsicle --batch --optimize=3 gif/*.gif

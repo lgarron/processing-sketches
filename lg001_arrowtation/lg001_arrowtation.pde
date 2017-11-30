@@ -1,8 +1,8 @@
 int samplesPerFrame = 4;
-int numFrames = 280;
+int numFrames = 200;
 float shutterAngle = 0.6;
 
-boolean recording = false;
+boolean recording = true;
 
 float l;
 
@@ -28,12 +28,12 @@ void arrow() {
   rect(-l/2, -l/2, l, l);
 }
 
-void grid(p) {
-  for (float x = 0; x <= width; x = x + l*2) {
-    for (float y = 0; y <= height; y = y + l*2) {
+void grid(float p) {
+  for (float x = 0; x <= width + l*2; x = x + l*2) {
+    for (float y = 0; y <= height + l*2; y = y + l*2) {
       push();
-      rotate(ease(p)*HALF_PI);
       translate(x, y);
+      rotate(p*HALF_PI);
       arrow();
       pop();
     }
@@ -42,14 +42,19 @@ void grid(p) {
 
 void draw_() {
   background(0);
-  grid(t*2);
-  // if (t < 1/2) {
-  //   background(0);
-  //   grid(constrain(t*2, 0, 1));
-  // } else {
-  //   background(0);
-  //   grid(constrain(t*2-1, 0, 1));
-  // }
+
+  float tt = (t * 4) % 1;
+  int iter = floor(t * 4);
+  int dir = (iter % 2 == 0) ? 1 : -1;
+
+  if (dir == 1) {
+    rect(0, 0, width, height);
+  }
+
+  push();
+  translate(-l * floor(iter/2), -l * floor((iter + 1)/2));
+  grid(ease(tt) - iter);
+  pop();
 }
 
 //////////////////////////////////////////////////////////////////////////////
