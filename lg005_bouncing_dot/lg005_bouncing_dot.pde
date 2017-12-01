@@ -1,12 +1,15 @@
 //////////////////////////////////////////////////////////////////////////////
 // Common Settings
-float numSec = 4;
-boolean recording = false;
-int kSamplesPerFrame = 1;
 
 public void settings() {
+  // Boilerplate-handled settings
+  _numSec = 4;
+  _recording = true;
+  _coverArtTime = 0.545;
+
+  // These 3 must be defined in the main file.
   size(512, 512, P3D);
-  pixelDensity(recording ? 1 : 2);
+  pixelDensity(_recording ? 1 : 2);
   smooth(8);
 }
 
@@ -27,7 +30,7 @@ float kBeamSpeed;
 float kBeamLength;
 float kBeamWidth;
 
-void setup() {
+void _setup() {
   blendMode(EXCLUSION);
   fill(255);
   noStroke();
@@ -42,6 +45,17 @@ void setup() {
   kBeamSpeed = kR * 4;
   kBeamLength = kR*5/8;
   kBeamWidth = kR/4;
+}
+
+void _draw() {
+  background(255);
+
+  push();
+  translate(width/2, 0);
+  bouncy_dots();
+  bars();
+
+  pop();
 }
 
 void beam(float p) {
@@ -111,15 +125,4 @@ void bars() {
 
     pop();
   }
-}
-
-void draw_() {
-  background(255);
-
-  push();
-  translate(width/2, 0);
-  bouncy_dots();
-  bars();
-
-  pop();
 }
