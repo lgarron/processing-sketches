@@ -21,12 +21,15 @@ void scale_tree(int dir, float p) {
   scale(1 - p * 0.5, 1 - p * 0.25);
 }
 
-void tree(int depth) {
-  if (depth == 0) {
+void tree(int remaining, int depth) {
+  if (remaining == 0) {
     return;
   }
 
-  // ellipse(0, 0, kDiam, kDiam);
+  push();
+  fill(255);
+  ellipse(0, 0, kDiam, kDiam * 4./9.); // TODO: Handle circle scaling
+  pop();
 
   for (int dir = -1; dir <=1; dir += 2) {
     strokeWeight(1);
@@ -34,7 +37,7 @@ void tree(int depth) {
     line(0, 0, dir * kStretch * kDiam, kDiam);
     push();
     scale_tree(dir, 1);
-    tree(depth - 1);
+    tree(remaining - 1, depth + 1);
     pop();
   }
 }
@@ -54,7 +57,7 @@ void main_tree() {
   push();
   scale_tree(-1, 1);
   scale_tree(-1, 1 - t);
-  tree(12);
+  tree(10, 0);
   pop();
 
   // beta
@@ -62,13 +65,17 @@ void main_tree() {
   line(
     kStretch * kDiam * (2 * t - 1), kDiam,
     (kStretch * kDiam - kStretch * 0.5 * kDiam) * (2 * t - 1), kDiam + kDiam * 0.75 
-  );
+  ); // TODO: scale weight to compensate.
+  fill(255);
+  float uhhhh = 0.3;
+  ellipse(kStretch * kDiam * (t-1), kDiam * (1-t), kDiam * uhhhh, kDiam * uhhhh);
+  ellipse(kStretch * kDiam * t, kDiam * t, kDiam * uhhhh, kDiam * uhhhh);
   pop();
   push();
   translate(kDiam * t, 0);
   scale_tree(-1, 1);
   scale_tree(1, 1);
-  tree(12);
+  tree(10, 0);
   pop();
 
   // gamma
@@ -79,7 +86,7 @@ void main_tree() {
   push();
   scale_tree(1, 1);
   scale_tree(1, t);
-  tree(12);
+  tree(10, 0);
   pop();
 }
 
