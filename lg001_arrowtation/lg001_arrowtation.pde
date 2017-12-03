@@ -4,9 +4,9 @@
 public void settings() {
   // Boilerplate-handled settings
   _numSec = 4;
-  _recording = true;
+  _recording = false;
   _motionBlurSamples = 4;
-  _coverArtTime = 0.545;
+  _coverArtTime = 0;
 
   // These 3 must be defined in the main file.
   size(512, 512, P3D);
@@ -49,18 +49,10 @@ void grid(float p) {
 }
 
 void _draw() {
-  background(0);
-
   float tt = (t * 4) % 1;
   int iter = floor(t * 4);
-  int dir = (iter % 2 == 0) ? 1 : -1;
 
-  if (dir == 1) {
-    rect(0, 0, width, height);
-  }
-
-  push();
+  background(255 * (iter % 2));
   translate(-l * floor(iter/2), -l * floor((iter + 1)/2));
   grid(ease(tt) - iter);
-  pop();
 }
