@@ -3,14 +3,14 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
+// Global variables
+float t, c;
+
 // Settings
 float _numSec = 4;
 boolean _recording = false;
 int _motionBlurSamples = 1;
 float _coverArtTime = 0;
-
-// Global variables
-float t, c;
 
 // File variables
 int[][] _result;
