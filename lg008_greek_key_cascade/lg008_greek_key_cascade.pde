@@ -1,4 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////
+// Greek Key
+// Collaboration with @MarissaSkud
+
+//////////////////////////////////////////////////////////////////////////////
 // Common Settings
 
 public void settings() {
@@ -49,21 +53,20 @@ void _setup() {
   l = unit_width/8;
 }
 
-void l_rect(float x, float y, float w, float h) {
-  rect(l * x, l * y, l * w, l * h);
-}
-
 void lin(float x1, float y1, float x2, float y2) {
-  l_rect(x1, y1, x2 - x1, y2 - y1);
+  rect(x1, y1, x2 - x1, y2 - y1);
 }
 
 void rotate_half_around(float x, float y) {
-  translate(x * l, y * l);
+  translate(x, y);
   rotate(PI);
-  translate(-x * l, -y * l);
+  translate(-x, -y);
 }
 
 void section(int s, float p) {
+  push();
+  scale(l, l);
+
   lin(4, 4, 5, 5);
   lin(8, 4, 9, 5);
 
@@ -109,6 +112,7 @@ void section(int s, float p) {
     }
     pop();
   }
+  pop();
 }
 
 void toggle(float p) {
