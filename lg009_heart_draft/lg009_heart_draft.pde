@@ -4,7 +4,7 @@
 public void settings() {
   // Boilerplate-handled settings
   _numSec = 2;
-  _recording = true;
+  // _recording = true;
   _coverArtTime = 0;
 
   // These 3 must be defined in the main file.
