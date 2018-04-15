@@ -11,6 +11,7 @@ float _numSec = 4;
 boolean _recording = false;
 int _motionBlurSamples = 1;
 float _coverArtTime = 0;
+boolean _showProgressBar = true;
 
 // File variables
 int[][] _result;
@@ -71,9 +72,6 @@ void setup() {
 
 void _progressBar() {
   push();
-  _draw();
-  pop();
-  push();
   fill(128);
   rect(0, 0, width * t, 4);
   pop();
@@ -117,7 +115,12 @@ void draw() {
     } else {
       t = (mouseX*2.0/width + 0.5) % 1;
     }
-    _progressBar();
+    push();
+    _draw();
+    pop();
+    if (_showProgressBar) {
+      _progressBar();
+    }
   }
   
   else {
