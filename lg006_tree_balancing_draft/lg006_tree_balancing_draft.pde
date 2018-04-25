@@ -43,6 +43,9 @@ void tree(int remaining, int depth) {
 }
 
 void main_tree() {
+  float time = ease(t);
+
+
   strokeWeight(1);
   stroke(255);
 
@@ -52,27 +55,27 @@ void main_tree() {
   // alpha
   push();
   scale_tree(-1, 1);
-  line(0, 0, -kStretch * kDiam * (1-t), kDiam * (1-t));
+  line(0, 0, -kStretch * kDiam * (1-time), kDiam * (1-time));
   pop();
   push();
   scale_tree(-1, 1);
-  scale_tree(-1, 1 - t);
+  scale_tree(-1, 1 - time);
   tree(10, 0);
   pop();
 
   // beta
   push();
   line(
-    kStretch * kDiam * (2 * t - 1), kDiam,
-    (kStretch * kDiam - kStretch * 0.5 * kDiam) * (2 * t - 1), kDiam + kDiam * 0.75 
+    kStretch * kDiam * (2 * time - 1), kDiam,
+    (kStretch * kDiam - kStretch * 0.5 * kDiam) * (2 * time - 1), kDiam + kDiam * 0.75 
   ); // TODO: scale weight to compensate.
   fill(255);
   float uhhhh = 0.3;
-  ellipse(kStretch * kDiam * (t-1), kDiam * (1-t), kDiam * uhhhh, kDiam * uhhhh);
-  ellipse(kStretch * kDiam * t, kDiam * t, kDiam * uhhhh, kDiam * uhhhh);
+  ellipse(kStretch * kDiam * (time-1), kDiam * (1-time), kDiam * uhhhh, kDiam * uhhhh);
+  ellipse(kStretch * kDiam * time, kDiam * time, kDiam * uhhhh, kDiam * uhhhh);
   pop();
   push();
-  translate(kDiam * t, 0);
+  translate(kDiam * time, 0);
   scale_tree(-1, 1);
   scale_tree(1, 1);
   tree(10, 0);
@@ -81,11 +84,11 @@ void main_tree() {
   // gamma
   push();
   scale_tree(1, 1);
-  line(0, 0, kStretch * kDiam * t, kDiam * t);
+  line(0, 0, kStretch * kDiam * time, kDiam * time);
   pop();
   push();
   scale_tree(1, 1);
-  scale_tree(1, t);
+  scale_tree(1, time);
   tree(10, 0);
   pop();
 }
