@@ -1,25 +1,45 @@
 //////////////////////////////////////////////////////////////////////////////
 // Common Settings
 float numSec = 1;
-boolean recording = false;
+boolean recording = true;
 int kSamplesPerFrame = 1;
+
+float kDiam;
+float kStretch;
+float base_circle_scale;
+int total_depth;
+float line_width;
 
 void setup_() {
   blendMode(SUBTRACT);
   fill(0);
   noStroke();
+
+  kDiam = width/5;
+  kStretch = 1;
+  base_circle_scale = width/16;
+  total_depth = 20;
+  line_width = width/128;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Sketch
 
-float kDiam = width;
-float kStretch = 1;
+
+float scale_x(float p) {
+  return 1 - p * 0.5;
+}
+
+float scale_y(float p) {
+  return 1 - p * 0.25;
+}
 
 void scale_tree(int dir, float p) {
   translate(dir * kStretch * kDiam * p, kDiam * p);
-  scale(1 - p * 0.5, 1 - p * 0.25);
+  scale(scale_x(p), scale_y(p));
 }
+
+boolean printed = false;
 
 void tree(int remaining, int depth) {
   if (remaining == 0) {
@@ -28,13 +48,18 @@ void tree(int remaining, int depth) {
 
   push();
   fill(255);
-  ellipse(0, 0, kDiam, kDiam * 4./9.); // TODO: Handle circle scaling
+  // ellipse(0, 0, kDiam, kDiam / circle_aspect_ratio); // TODO: Handle circle scaling
+  strokeWeight(base_circle_scale);
+  point(0, 0);
   pop();
 
   for (int dir = -1; dir <=1; dir += 2) {
     strokeWeight(1);
     stroke(255);
+    push();
+    strokeWeight(line_width);
     line(0, 0, dir * kStretch * kDiam, kDiam);
+    pop();
     push();
     scale_tree(dir, 1);
     tree(remaining - 1, depth + 1);
@@ -45,12 +70,20 @@ void tree(int remaining, int depth) {
 void main_tree() {
   float time = ease(t);
 
-
-  strokeWeight(1);
+  strokeWeight(1 * line_width);
   stroke(255);
 
-  line(0, 0, -kStretch * kDiam, kDiam);
-  line(0, 0, kStretch * kDiam, kDiam);
+  push();
+  strokeWeight(0.72 * line_width);
+  strokeCap(ROUND);
+  strokeJoin(ROUND);
+  noFill();
+  beginShape();
+  vertex(-kStretch * kDiam, kDiam);
+  vertex(0, 0);
+  vertex(kStretch * kDiam, kDiam);
+  endShape();
+  pop();
 
   // alpha
   push();
@@ -60,36 +93,46 @@ void main_tree() {
   push();
   scale_tree(-1, 1);
   scale_tree(-1, 1 - time);
-  tree(10, 0);
+  tree(total_depth, 0);
   pop();
 
   // beta
   push();
+  strokeWeight(line_width * 3/4.);
   line(
     kStretch * kDiam * (2 * time - 1), kDiam,
     (kStretch * kDiam - kStretch * 0.5 * kDiam) * (2 * time - 1), kDiam + kDiam * 0.75 
   ); // TODO: scale weight to compensate.
+  pop();
   fill(255);
   float uhhhh = 0.3;
-  ellipse(kStretch * kDiam * (time-1), kDiam * (1-time), kDiam * uhhhh, kDiam * uhhhh);
-  ellipse(kStretch * kDiam * time, kDiam * time, kDiam * uhhhh, kDiam * uhhhh);
+  // ellipse(kStretch * kDiam * (time-1), kDiam * (1-time), kDiam * uhhhh, kDiam * uhhhh);
+  // ellipse(kStretch * kDiam * time, kDiam * time, kDiam * uhhhh, kDiam * uhhhh);
+  push();
+  strokeWeight(base_circle_scale*0.72);
+  point(kStretch * kDiam * (time-1), kDiam * (1-time));
+  point(kStretch * kDiam * time, kDiam * time);
   pop();
+
   push();
   translate(kDiam * time, 0);
   scale_tree(-1, 1);
   scale_tree(1, 1);
-  tree(10, 0);
+  tree(total_depth, 0);
   pop();
 
   // gamma
   push();
   scale_tree(1, 1);
+  push();
+  strokeWeight(line_width);
   line(0, 0, kStretch * kDiam * time, kDiam * time);
+  pop();
   pop();
   push();
   scale_tree(1, 1);
   scale_tree(1, time);
-  tree(10, 0);
+  tree(total_depth, 0);
   pop();
 }
 
