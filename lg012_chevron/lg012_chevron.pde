@@ -4,7 +4,7 @@
 
 public void settings() {
   // Boilerplate-handled settings
-  _numSec = 8;
+  _numSec = 4;
   _recording = true;
   _motionBlurSamples = 4;
   _coverArtTime = 0;
