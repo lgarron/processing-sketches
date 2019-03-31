@@ -47,7 +47,7 @@ boolean _mouseHasMoved = false;
 
 void _setupHasMouseMoved() {
   _mousePrevX = mouseX;
-}
+}  
 
 boolean _hasMouseMoved() {
   if (_mousePrevX != mouseX) {
@@ -56,6 +56,9 @@ boolean _hasMouseMoved() {
   _mousePrevX = mouseX;
   return _mouseHasMoved;
 }
+float clamp(float p) {
+  return constrain(p, 0, 1);
+}      
 
 //////////////////////////////////////////////////////////////////////////////
 // Setup
@@ -63,7 +66,7 @@ boolean _hasMouseMoved() {
 void setup() {
   _setupHasMouseMoved();
   _setup();
-
+  
   _result = new int[width*height][3];
 }
 
@@ -93,7 +96,7 @@ void _motionBlur() {
       _result[i][0] += pixels[i] >> 16 & 0xff;
       _result[i][1] += pixels[i] >> 8 & 0xff;
       _result[i][2] += pixels[i] & 0xff;
-    }
+    }  
   }
 
   loadPixels();
