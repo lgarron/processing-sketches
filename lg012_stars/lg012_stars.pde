@@ -4,7 +4,7 @@
 
 public void settings() {
   // Boilerplate-handled settings
-  _numSec = 8;
+  _numSec = 3;
   _recording = true;
   _motionBlurSamples = 4;
   _coverArtTime = 0;
@@ -96,20 +96,34 @@ void rec(float sx, float sy, float rx, float ry, float r, float p) {
 
 
 void _draw() {
-  float tt = ease((t * 8) % 1);
+  float tt = ease((t * 4) % 1);
   int iter = floor(t * 8);
 
   background(255);
   push();
   translate(width/2, width/2);
-  rotate(t * HALF_PI * 2);
+  //rotate(t * HALF_PI * 2);
   translate(-width/2, -width/2);
-  if (t < 1.0/8) { grid(tt, 0, 0); }
-  else if (t < 2./8) { rec(1, -1, l * 3/2, l/2, 0, tt); }
-  else if (t < 3./8) { grid(3, 2-tt, 0); }
-  else if (t < 5./8) { grid(3, 1, ease((t - 3./8) *4)* 2); }
-  else if (t < 6./8) { grid(3+tt, 1, 0); }
-  else if (t < 7./8) { rec(-1, 1, l*3/2, l/2, 2, 1-tt); }
-  else if (t < 8./8) { grid(2, 3-tt, 0);}
+  
+  grid(3, 1, ease(t)*2 + 0.5); 
+  
+  //if (t < 1./4) { grid(3, 1, tt/2 + 0.5); }
+  //else if (t < 2./4) { grid(3, 1, tt/2 + 1.0); }
+  //else if (t < 3./4) { grid(3, 1, tt/2 + 1.5); }
+  //else if (t < 4./4) { grid(3, 1, tt/2 + 2); }
+  //else if (t < 2./4) { grid(3, 1, tt/2 + 2.5); }
+  //else if (t < 3./4) { grid(3, 1, tt/2 + 3); }
+  //else if (t < 4./4) { grid(3, 1, tt/2 + 3.5); }
+  
+  //if (t < 1.0/8) { grid(tt, 0, 0); }
+  //else if (t < 2./8) { rec(1, -1, l * 3/2, l/2, 0, tt); }
+  //else if (t < 3./8) { grid(3, 2-tt, 0); }
+  
+  //else if (t < 9./16) {  grid(3, 1, ease((t - 6./8)*16./3)); }
+  //else if (t < 10./16) { grid(3, 1,0.5+1.5*ease((t * 16) % 1)); }
+  ////else if (t < 5./8) { grid(3, 1, ease((t - 3./8) *4)* 2); }
+  //else if (t < 6./8) { grid(3+tt, 1, 0); }
+  //else if (t < 7./8) { rec(-1, 1, l*3/2, l/2, 2, 1-tt); }
+  //else if (t < 8./8) { grid(2, 3-tt, 0);}
   pop();
 }
